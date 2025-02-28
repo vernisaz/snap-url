@@ -4,6 +4,7 @@ use std::convert::TryInto;
 use std::time::{SystemTime,UNIX_EPOCH};
 use simweb::WebData;
 use data;
+use json;
 use std::fs;
 use KEY_LEN;
 
@@ -14,7 +15,7 @@ pub struct GenPage {
 impl simweb::WebPage for GenPage {
     fn main_load(&self) -> Result<String, String> {
         let req = WebData::new();
-        let load = req. param("message").ok_or("no parameter message")?;
+        let load = json::esc_quotes(req. param("message").ok_or("no parameter message")?);
         //let load = esc_quote(load);
         let random_sequence = data::generate_random_sequence(KEY_LEN); // get len as a global constant
         let xx = random_sequence.as_bytes();

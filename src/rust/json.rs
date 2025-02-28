@@ -327,6 +327,8 @@ pub fn parse_fragment<I>(chars: &mut I ) -> (JsonData,char)
             }
             '-' => {
                 match state {
+                    JsonState::ObjName => field_name.push(c),
+                    JsonState::ObjData => field_value.push(c),
                     JsonState::Start => state = JsonState::NegNum,
                     JsonState::ExpExpValue => state = JsonState::NegExpNum,
                     _ => todo!("state {state:?}")
@@ -564,6 +566,18 @@ pub fn parse_fragment<I>(chars: &mut I ) -> (JsonData,char)
         
     }
     (JsonData::None,char::from_u32(0).unwrap())
+}
+
+pub fn esc_quotes(jstr: String) -> String {
+    let mut res = String::new();
+    for c in jstr.chars() {
+        match c {
+            '"' => res.push('\\') ,
+            _ => ()
+        }
+        res.push(c)
+    }
+    res
 }
 
 #[cfg(test)]
