@@ -1,0 +1,41 @@
+#main=src${~/~}rust${~/~}data
+main=src${~/~}rust${~/~}snapcgi
+
+project=snapurl
+
+crate_dir=..${~/~}crates
+
+dep_crates=[--extern, simweb]
+comp opts=[]
+
+common =..${~/~}simscript${~/~}comm-build.7b:file
+
+include(common);
+
+target make gen {
+	dependency{ eq {
+           timestamp(.gen)
+        }
+    }
+    display(Making .gen)
+    mkd (.gen)
+}
+
+target gen_al {
+	dependency{target(make gen)}
+	dependency{anynewer(.gen${~/~}aliases.properties,src)}
+	write(.gen${~/~}aliases.properties,"from=/snapurl;dir=${~cwd~}${~/~}.gen")
+}
+
+target deploy {
+	dependency{or{anynewer(src,.gen);anynewer(bee.7b,.gen);}}
+	dependency{target(build)}
+	display( deploying....)
+	cp(src${~/~}html${~/~}index.html,.gen)
+	mkd (.gen${~/~}editor)
+	cp(src${~/~}dep${~/~}nic${~/~}nicEdit.js, .gen${~/~}editor)
+	cp(src${~/~}dep${~/~}nic${~/~}nicEditorIcons.gif, .gen${~/~}editor)
+	cp(src${~/~}js${~/~}common.js, .gen)
+display(${executable}-> ..${~/~}rusthub${~/~}src${~/~}rust${~/~}rustcgi)	
+	cp(${executable}, ..${~/~}rusthub${~/~}src${~/~}rust${~/~}rustcgi)
+}
