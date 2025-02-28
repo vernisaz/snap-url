@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to the Snap URL</title>
-    <link rel="icon" type="image/x-icon" href="/snapurl/surl-favicon.ico">
+    <link rel="icon" type="image/ico" href="./favicon.ico">
     <style>
         * {
           box-sizing: border-box;
@@ -58,7 +58,7 @@
         .payment-form h2 {
             margin-bottom: 20px;
         }
-        .payment-form input {
+        .payment-form input, .navi input {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -77,8 +77,14 @@
         .payment-form button:hover {
             background-color: #4cae4c;
         }
-        .payment-form label {
-            display: block;
+        #get-code button {
+            width: 102px;
+            padding: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
         
     @media (prefers-color-scheme: dark) {
@@ -98,8 +104,9 @@
        
        function genURL() {
            const mess = myNicEditor.instanceById('myInstance1').getContent()
-           
-           ajax.post({url:"/rustcgi/snapurl", query: "message="+encodeURIComponent(mess)
+           if (mess.trim() == '') return;
+           const startDate = document.querySelector('#start');
+           ajax.post({url:"/rustcgi/snapurl", query: "message="+encodeURIComponent(mess) + '&time=' + startDate.valueAsNumber
            , success: function (data) { 
                  if (data.startsWith('Ok')) {
                     //alert('this URL:'+data.substring(2))
@@ -117,7 +124,28 @@
     
     <div style="overflow:auto">
       <div class="navi">
-        some text will be there
+          <h2>Constrains</h2>
+        <label for="start">Start date:</label>
+        <input
+          type="date"
+          id="start"
+          name="url-start"
+          value=""
+          min="2025-01-01"
+          max="2030-12-31" required/>
+        <label for="stime">Time:</label>
+
+        <input type="time" id="stime" name="stime"/>
+        <label for="end">End date:</label>
+        <input
+          type="date"
+          id="end"
+          name="url-end"
+          value=""
+          min="2025-01-01"
+          max="2032-12-31" required/>
+          <label for="email">E-mail to notify:</label>
+          <input type="email" id="email" pattern=".+@gmail\.com" size="30" placeholder="friend@hotmail.com" required />
       </div>
     
       <div class="main">
@@ -134,6 +162,10 @@
                           const txtdiv = document.getElementById('myInstance1');
                           txtdiv.innerHTML = txt
                       }, respType:"html"})
+                  } else {
+                      const dateControl = document.querySelector('#start'); // input[type="date"]
+                      const curDate = new Date();
+                      dateControl.value = curDate.getFullYear() + '-' + ('0'+(curDate.getMonth()+1)).slice(-2) + '-' + curDate.getDate();
                   }
              });
         </script>
@@ -144,7 +176,7 @@
         <div id="myInstance1" style="font-size: 16px; background-color: #ccc; padding: 3px; width: 400px;">
        
         </div>
-        <button type="button" onclick="genURL()">Get URL</button>
+        <div id="get-code" style="margin-top:42px;"><button type="button" onclick="genURL()">Get URL</button></div>
       </div>
     
       <div class="right">
@@ -167,7 +199,7 @@
             <input type="text" id="state" name="state" required>
             <label for="zip-code">Zip Code:</label>
             <input type="text" id="zip" name="zip" required>
-            <button type="submit">Pay Now</button>
+            <button type="submit">Get URL with constrains</button>
         </form>
       </div>
     </div>
