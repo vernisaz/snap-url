@@ -29,7 +29,7 @@ target gen_al {
 
 target deploy {
 	dependency{or{anynewer(src,.gen);anynewer(bee.7b,.gen);}}
-	dependency{anynewer(src,.gen)}
+	dependency{anynewer(src${~/~}html${~/~}index.html,.gen${~/~}index.html)}
 	dependency{target(build)}
 	display( deploying....)
 	cp(src${~/~}html${~/~}index.html,.gen)
@@ -38,6 +38,7 @@ target deploy {
 	cp(src${~/~}dep${~/~}nic${~/~}nicEditorIcons.gif, .gen${~/~}editor)
 	cp(src${~/~}js${~/~}common.js, .gen)
 	cp(src${~/~}image${~/~}favicon.ico,.gen${~/~}favicon.ico)
+	cp(src${~/~}image${~/~}copy.svg,.gen${~/~}copy.svg)
  display(${executable}-> ..${~/~}rusthub${~/~}src${~/~}rust${~/~}rustcgi)	
 	cp(${executable}, ..${~/~}rusthub${~/~}src${~/~}rust${~/~}rustcgi)
 }

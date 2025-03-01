@@ -563,7 +563,6 @@ pub fn parse_fragment<I>(chars: &mut I ) -> (JsonData,char)
                 }
             }
         }
-        
     }
     (JsonData::None,char::from_u32(0).unwrap())
 }
@@ -572,7 +571,7 @@ pub fn esc_quotes(jstr: String) -> String {
     let mut res = String::new();
     for c in jstr.chars() {
         match c {
-            '"' => res.push('\\') ,
+            '"' | '\\' => res.push('\\') ,
             _ => ()
         }
         res.push(c)
