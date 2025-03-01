@@ -38,3 +38,6 @@ current load of the system.
 An information size is limited to 32K. No images, videos or sound can be in. However, an information can include links, or any other access tokens
 in a text form. UTF-8 is used and an information is HTML formatted. There is also a protection against JavaScript code
 execution in an information and direct or indirect accessing other URLs from it without a user consent.
+
+## Dependencies
+The Rust code has one penendency [simweb](https://github.com/vernisaz/simweb). It was tested only with TJWS CGI extension.
