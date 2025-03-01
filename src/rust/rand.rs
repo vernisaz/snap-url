@@ -61,6 +61,7 @@ impl PCG32 {
         (xorshifted >> rot) | (xorshifted << (((!rot).wrapping_add(1u32)) & 31))
     }
 
+    #[allow(dead_code)]
     pub fn next_u32_bounded(&mut self, bound: u32) -> u32 {
         // To avoid bias, we need to make the range of the RNG a multiple of
         // bound, which we do by dropping output less than a threshold.
@@ -93,6 +94,7 @@ impl PCG32 {
         }
     }
 
+    #[allow(dead_code)]
     pub fn next_float(&mut self) -> f32 {
         let next_uint = self.next_u32();
         unsafe {
@@ -136,6 +138,7 @@ impl PCG32 {
         self.state = acc_mult.wrapping_mul(self.state).wrapping_add(acc_plus);
     }
 
+    #[allow(dead_code)]
     pub fn shuffle<T>(&mut self, slice: &mut [T]) {
         if slice.len() <= 1 {
             return;

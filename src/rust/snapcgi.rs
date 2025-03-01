@@ -9,6 +9,8 @@ use simweb::WebPage;
 
 const KEY_LEN: usize = 123;
 
+const DATA_DIR: &str = ".dat";
+
 fn main() {
     let web_path = std::env::var(String::from("PATH_INFO"));
     eprintln!{"pi {web_path:?}"}

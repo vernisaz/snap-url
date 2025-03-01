@@ -21,14 +21,11 @@ pub fn get_data_access() -> Result<DataAccess, &&'static str> {
     Err("No data access configured yet")
 }
 */
+#[allow(dead_code)]
 struct SimEntry {
     key: [u8;123],
     stat: u8,
-    
-}
-
-struct SimTabl {
-    table: [SimEntry;256]
+    num: u16
 }
 
 pub fn calc_hash(key: [u8;123]) -> u16 {
