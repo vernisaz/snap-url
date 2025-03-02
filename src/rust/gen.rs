@@ -17,6 +17,12 @@ pub struct GenPage {
 impl simweb::WebPage for GenPage {
     fn main_load(&self) -> Result<String, String> {
         let req = WebData::new();
+        let _email = req. param("email");
+        let ccn = req. param("card-number");
+        match ccn {
+            Some(_ccn) => return Ok("ErrPayment to CC didn't came through".to_owned()),
+            _ => ()
+        }
         let load = json::esc_quotes(req. param("message").ok_or("no parameter message")?);
         //let load = esc_quote(load);
         let random_sequence = data::generate_random_sequence(KEY_LEN); // get len as a global constant
