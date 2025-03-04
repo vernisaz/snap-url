@@ -123,7 +123,7 @@
        function genURLWithConst() {
            const mess = myNicEditor.instanceById('myInstance1').getContent()
            if (mess.trim() == '') return;
-           validatePayment()
+           if (!validatePayment()) return;
            const urldiv = document.getElementById('url2');
            const ccForm = document.querySelector('.payment-form')
            const formData = new FormData(ccForm);
@@ -144,14 +144,38 @@
                     urldiv.innerHTML = window.location.protocol + "//" + window.location.host + window.location.pathname +
                        '?id=' + data.substring(2) + ' <img src="copy.svg" title="Copy to the clipboard" alt="Copy to the clipboard" style="width:22px;height:22px;">'
                  } else if (data.startsWith('Err')) {
-                     urldiv.innerHTML = 'Error'
+                     urldiv.innerHTML = 'Error:' + data.substring(3) 
                  }
              }, respType:"html"})
        }
        
        function validatePayment() {
-           return true
+           const cc = validateCardNumber(document.querySelector('#card-number').value)
+           return cc[0]
        }
+       
+        function validateCardNumber(number) {
+            let sum = 0;
+            let numDigits = number.length;
+            let parity = numDigits % 2;
+            
+            for (let i = 0; i < numDigits; i++) {
+                let digit = parseInt(number.charAt(i), 10);
+                
+                if (i % 2 === parity) {
+                    digit *= 2;
+                    if (digit > 9) {
+                        digit -= 9;
+                    }
+                }
+                
+                sum += digit;
+            }
+            
+            const isValid = (sum % 10 === 0);
+            const firstDigits = parseInt(number.substring(0, 2), 10); // Extract the first two digits
+            return [isValid, numDigits, firstDigits];
+        }
    </script>
   </head>
   <body>
@@ -210,6 +234,10 @@
         <div id="myNicPanel" style="width: 350px;"></div>
         <div id="myInstance1" style="font-size: 16px; background-color: #ddd; padding: 3px; width: 400px;">
        
+        </div>
+        <div>
+            <input type="checkbox" id="terms" name="terms" />
+             <label for="terms">I agree with the terms of the service</label>
         </div>
         <div id="get-code" style="margin-top:42px;"><button type="button" onclick="genURL()">Get URL</button></div>
         <div id="warn-div" style="margin-top: auto;color:#BA0E0F;visibility:hidden;text-align: center;padding: 10px;">Do not try to use the generated URL, because it will loose its power.</div>

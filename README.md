@@ -21,6 +21,15 @@ and doesn't provide a security for a distribution.
 2. get a notification that URL was opened and which IP from
 3. revoke the URL
 
+## Payment protection
+It's required to provide an e-mail for a receipt.
+When you pay for extra features, the following security measurements taking a place:
+1. Payment receipt gets sent in the e-mail you provided, however if payment didn't get through, you receive nothing,
+there is no other indication of an unsuccessful payment. You will get a snap URL in any case, but without extra features
+ if the payment was unsuccessful
+2. You'll receive a text message with a security token, when a phone number is provided with a payment
+3. Compromised e-mail addresses didn't get accepted in payments, however here is no indication the provided e-mail address is compromised
+
 ## Privacy
 Snap URL doesn't collect an information about the users of the system besides of required to provide the paid service.
 Snap URL isn't responsible for what information is shared and doesn't store the information besides of required for the service.
@@ -40,4 +49,4 @@ in a text form. UTF-8 is used and an information is HTML formatted. There is als
 execution in an information and direct or indirect accessing other URLs from it without a user consent.
 
 ## Dependencies
-The Rust code has one dependency [simweb](https://github.com/vernisaz/simweb). It was tested only with TJWS CGI extension.
+The Rust code has one dependency [simweb](https://github.com/vernisaz/simweb). It was tested only with TJWS CGI extension

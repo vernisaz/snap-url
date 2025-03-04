@@ -20,7 +20,8 @@ impl simweb::WebPage for GenPage {
         let _email = req. param("email");
         let ccn = req. param("card-number");
         match ccn {
-            Some(_ccn) => return Ok("ErrPayment to CC didn't came through".to_owned()),
+            Some(_ccn) if _ccn.is_empty() => return Ok("ErrPayment to CC didn't come through".to_owned()),
+            // TODO add a payment processing, sending a receipt and texting a security token
             _ => ()
         }
         let load = json::esc_quotes(req. param("message").ok_or("no parameter message")?);
