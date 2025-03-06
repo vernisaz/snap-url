@@ -39,6 +39,7 @@ target deploy {
 	cp(src${~/~}js${~/~}common.js, .gen)
 	cp(src${~/~}image${~/~}favicon.ico,.gen${~/~}favicon.ico)
 	cp(src${~/~}image${~/~}copy.svg,.gen${~/~}copy.svg)
+ #rb
  display(${executable}-> ..${~/~}rusthub${~/~}src${~/~}rust${~/~}rustcgi)	
 	cp(${executable}, ..${~/~}rusthub${~/~}src${~/~}rust${~/~}rustcgi)
 }
