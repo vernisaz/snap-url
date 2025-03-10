@@ -1,0 +1,19 @@
+project ="snapscrap"
+build_directory= "lib"
+source_directory=  src/java
+build_file= ${project}.jar
+domain=com
+main class=${domain}.${project}.Amazer
+
+include(dep.7b)
+
+scripts=..${~/~}simscript
+common java =${scripts}${~/~}comm-java.7b:file
+common env=${scripts}${~/~}java-env.7b:file
+
+include(common env);
+include(common java);
+
+target all {
+	dependency{target(jar)}
+}

@@ -2,15 +2,20 @@
 main=src${~/~}rust${~/~}snapcgi
 
 project=snapurl
+domain=com
 
 crate_dir=..${~/~}crates
 
 dep_crates=[--extern, simweb]
 comp opts=[]
 
+web server home=..${~/~}TJWS${~/~}1.x
+
 common =..${~/~}simscript${~/~}comm-build.7b:file
+common env=..${~/~}simscript${~/~}java-env.7b:file
 
 include(common);
+include(common env)
 
 target make gen {
 	dependency{ eq {
@@ -27,10 +32,45 @@ target gen_al {
 	write(.gen${~/~}aliases.properties,"from=/snapurl;dir=${~cwd~}${~/~}.gen")
 }
 
+target make work dirs {
+	dependency{ or {
+			eq {
+	           timestamp(${web server home}${~/~}.dat)
+	        }
+	        eq {
+	           timestamp(${web server home}${~/~}.fak)
+	        }
+	    }
+    }
+    display(Making work dirs)
+    if {
+    	eq {
+	           timestamp(${web server home}${~/~}.dat)
+	       } then {
+	       		mkd (${web server home}${~/~}.dat)
+	       }
+    }
+    if {
+    	eq {timestamp(${web server home}${~/~}.fak)} then {
+	       		mkd (${web server home}${~/~}.fak)
+	       }
+    }
+}
+
+include(dep.7b)
+
+target rand {
+	dependency{target(make work dirs)}
+	dependency{}
+	#display(rand)
+	exec java (-cp,lib${~path_separator~}${deps},${domain}.${project}.Amazer,${web server home})
+}
+
 target deploy {
 	dependency{or{anynewer(src,.gen);anynewer(bee.7b,.gen);}}
 	dependency{anynewer(src${~/~}html${~/~}index.html,.gen${~/~}index.html)}
 	dependency{target(build)}
+	dependency{target(rand)}
 	display( deploying....)
 	cp(src${~/~}html${~/~}index.html,.gen)
 	mkd (.gen${~/~}editor)

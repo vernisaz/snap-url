@@ -8,7 +8,8 @@ use data;
 use json;
 use json::JsonData::{Data,Text,Num};
 use KEY_LEN;
-use DATA_DIR;
+use {DATA_DIR, FAKE_DIR};
+use rand::PCG32;
 
 pub struct SnapPage {
     pub key: String
@@ -47,7 +48,17 @@ impl simweb::WebPage for SnapPage {
                 _ => ()
             }
         } else { eprintln!{"no file {snap_file:?}"} }
-        
-        Ok("funny".to_string()) // get random text from web scrapping
+        let mut ran = PCG32::new ();
+        // TODO set seed from time
+        let slot = ran.next_u32() % 32;
+        let mut snap_file = PathBuf::new();
+        snap_file.push(FAKE_DIR);
+        snap_file.push(format!{"{slot}"});
+        snap_file.set_extension("scr");
+        if Path::new(&snap_file).is_file() {
+            Ok(fs::read_to_string(&snap_file).map_err(|e| format!{"{e:?}"})?)
+        } else {
+            Ok(format!{"funny {slot}"}) // get random text from web scrapping
+        }
     }
 }
