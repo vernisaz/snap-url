@@ -57,7 +57,31 @@ impl simweb::WebPage for SnapPage {
         snap_file.set_extension("scr");
         if Path::new(&snap_file).is_file() {
             Ok(fs::read_to_string(&snap_file).map_err(|e| format!{"{e:?}"})?)
-        } else {
+        } else { // just read some random file from there
+            let path = Path::new(FAKE_DIR);
+            let mut count = 0;
+        
+            if path.is_dir() {
+                for entry in fs::read_dir(path).map_err(|e| format!{"{e:?}"})? {
+                    let entry = entry.map_err(|e| format!{"{e:?}"})?;
+                    if entry.path().is_file() {
+                        count += 1;
+                    }
+                }
+                let ran_val = ran.gen_range(1.0, count as f64) as u32;
+                eprintln!{"found {count} entries in {path:?} and ran {ran_val}"}
+                count = 0;
+                for entry in fs::read_dir(path).map_err(|e| format!{"{e:?}"})? {
+                    let entry = entry.map_err(|e| format!{"{e:?}"})?;
+                    if entry.path().is_file() {
+                        count += 1;
+                        if count == ran_val {
+                            return  Ok(fs::read_to_string(entry.path()).map_err(|e| format!{"{e:?}"})?)
+                        }
+                    }
+                }
+            }
+            
             Ok(format!{"funny {slot}"}) // get random text from web scrapping
         }
     }
