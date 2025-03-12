@@ -49,7 +49,10 @@ impl simweb::WebPage for SnapPage {
             }
         } else { eprintln!{"no file {snap_file:?}"} }
         let mut ran = PCG32::new ();
-        // TODO set seed from time
+        let seed = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos() % 100_000_000_u128;
+        let seq = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos() % 362_043_u128;
+        ran.seed(seed as u64, seq as u64);
+    
         let slot = ran.next_u32() % 32;
         let mut snap_file = PathBuf::new();
         snap_file.push(FAKE_DIR);

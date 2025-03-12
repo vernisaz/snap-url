@@ -12,7 +12,7 @@ public class Amazer {
     public static void main(String...args) {
         var session = new WebSession().create();
         try {
-            var page = session.read(new URL("https://babynamesatoz.com/hindu-girl-indian-royal-names"), 0);
+            var page = session.read(new URL("https://liliputing.com/orange-pi-rv2-is-a-single-board-pc-with-an-8-core-risc-v-processor/"), 0);
             int randomValue = ThreadLocalRandom.current().nextInt(0, 255); // --> get max from config
             Files.write(Paths.get(args[0], ".fak", String.valueOf(randomValue) + ".scr"), page.getText());
         } catch(IOException mue) {
