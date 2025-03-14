@@ -14,6 +14,36 @@ common env=${scripts}${~/~}java-env.7b:file
 include(common env);
 include(common java);
 
+target temp_dir {
+    dependency {
+        eq {
+           timestamp(.temp_repo)
+        }
+    }
+    display(Making .temp_repo)
+    mkd (
+        .temp_repo
+    )
+}
+
+target jsoup_load {
+     dependency {
+          target(temp_dir)
+      }
+    dependency {
+       eq {
+           timestamp(.temp_repo${~/~}${jsoup_jar})
+       }
+    }
+     as_url(jsoup)
+     exec wget (
+       ~~, 
+       -O,
+       .temp_repo${~/~}${jsoup_jar}
+     )
+}
+
 target all {
+	dependency{target(jsoup_load)}
 	dependency{target(jar)}
 }

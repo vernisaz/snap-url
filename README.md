@@ -30,19 +30,19 @@ there is no other indication of an unsuccessful payment. You will get a snap URL
 2. You'll receive a text message with a security token, when a phone number is provided with a payment
 3. Compromised e-mail addresses didn't get accepted in payments, however here is no indication the provided e-mail address is compromised
 
-No e-mail receipt means that something was wrong with your payment.
+No e-mail receipt means that something  wrong was with your payment.
 
 ## Privacy
 Snap URL doesn't collect information about users of the system besides of required to provide a paid service.
 Snap URL isn't responsible for what information is shared and doesn't store the information besides of required for the service.
 
 
-## A protection from hacking or using this service for a SPAM, or other ilegal activities
+## A protection from hacking or using this service for a SPAM, or other illegal activities
 Snap URL uses the following technique. Any access URL has a response. However, the response reflects the real data only
 for the correct URL. Other responses contain some random data. There is no indication that the data were real or mocked up.
 Since the real data returned by the system only once, multiple accesses of the correct URL will produce the actual data
 only at the first hit.
-A chance of DOS reduced by obligatory throttling. Any response gets processed for 3-10 seconds in dependency on the 
+A chance of DoS attack reduced by an obligatory throttling. Any response gets processed for 3-10 seconds in dependency on the 
 current load of the system.
 
 ## Sizing

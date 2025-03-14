@@ -1,1 +1,4 @@
-deps=..${~/~}webbreaker${~/~}bin${~/~}webbreaker.jar${~path_separator~}..${~/~}htmlkit${~/~}bin${~/~}htmlkit.jar${~path_separator~}..${~/~}aldan3-jdo${~/~}build${~/~}aldan3-jdo.jar${~path_separator~}..${~/~}aldan3${~/~}build${~/~}aldan3.jar
+jsoup="org.jsoup:jsoup:1.19.1":rep-maven
+as_jar(jsoup)
+assign(jsoup_jar,~~)
+deps=.temp_repo${~/~}${jsoup_jar}${~path_separator~}..${~/~}webbreaker${~/~}bin${~/~}webbreaker.jar${~path_separator~}..${~/~}htmlkit${~/~}bin${~/~}htmlkit.jar${~path_separator~}..${~/~}aldan3-jdo${~/~}build${~/~}aldan3-jdo.jar${~path_separator~}..${~/~}aldan3${~/~}build${~/~}aldan3.jar

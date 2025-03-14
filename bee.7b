@@ -61,7 +61,7 @@ include(dep.7b)
 
 target rand {
 	dependency{target(make work dirs)}
-	#dependency{true}
+	dependency{true}
 	#display(rand)
 	exec java (-cp,lib${~path_separator~}${deps},${domain}.${project}.Amazer,${web server home})
 }
