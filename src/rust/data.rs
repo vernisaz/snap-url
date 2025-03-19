@@ -33,7 +33,7 @@ pub fn calc_hash(key: [u8;123]) -> u16 {
     for e in key {
         res += e as u16
     }
-    ( res % 256 ) as u16
+    ( res % 256 ) as u16 // TODO make the base value configurable constant
 }
 
 pub fn generate_random_sequence(n: usize) -> String {

@@ -67,7 +67,7 @@ impl simweb::WebPage for GenPage {
                                            // can be skeeped if time passed
                                            match file.read_exact(&mut buffer3) {
                                               Ok(_) => {
-                                                  if now.as_millis()- (time as u128) < 1000_u128*60*60*24*7  { // 7 days
+                                                  if (now.as_millis() as i64) - time < 1000_i64*60*60*24*7  { // 7 days
                                                         // TODO check if key == buffer3 (sanity check)
                                                         let entry = DirEntry{num:n as u32, time: time as u64, key: buffer3.clone()};
                                                         clashes.push(entry)
@@ -119,6 +119,7 @@ impl simweb::WebPage for GenPage {
             let _ = file.write_all(format!{"{:0>5}", entry.num}.as_bytes());
             let _ = file.write_all(format!{"{:0>14}", entry.time}.as_bytes());
             let _ = file.write_all(&entry.key);
+            // if errors at writing, then probably notify somehow
         }
         let pos = file.stream_position().map_err(|e| format!{"{e:?}"})?;
         file.set_len(pos).map_err(|e| format!{"{e:?}"})?;
@@ -128,6 +129,7 @@ impl simweb::WebPage for GenPage {
         file_dat.set_extension("dat");
         let current = now.as_millis();
         let json = format!{r#"{{"mes": "{load}", "key" : "{random_sequence}", "active":true, "time":{current}}}"#};
+        // assume that te file gets truncated
         fs::write(&file_dat, json).map_err(|e| format!{"{e:?}"})?;
 
         Ok("Ok".to_owned() + &random_sequence)

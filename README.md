@@ -42,8 +42,8 @@ Snap URL uses the following technique. Any access URL has a response. However, t
 for the correct URL. Other responses contain some random data. There is no indication that the data were real or mocked up.
 Since the real data returned by the system only once, multiple accesses of the correct URL will produce the actual data
 only at the first hit.
-A chance of DoS attack reduced by an obligatory throttling. Any response gets processed for 3-10 seconds in dependency on the 
-current load of the system.
+A chance of DoS attack reduced by an obligatory throttling. Any request gets processed for 3-10 seconds in dependency on the 
+current load of the system. It also protects the system from flooding with dummy or oversized messages.
 
 ## Sizing
 An information size is limited to 32K. No images, videos or sound can be in. However, an information can include links, or any other access tokens
