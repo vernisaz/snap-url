@@ -128,7 +128,9 @@ impl simweb::WebPage for GenPage {
         file_dat.push(format!{"{hash}-{num}"});
         file_dat.set_extension("dat");
         let current = now.as_millis();
-        let json = format!{r#"{{"mes": "{load}", "key" : "{random_sequence}", "active":true, "time":{current}}}"#};
+        let json = format!{r#"{{"mes": "{load}", "key" : "{random_sequence}", "active":true, "time":{current}, "from":"{}"}}"#,
+            std::env::var(String::from("REMOTE_ADDR")).unwrap()
+        };
         // assume that te file gets truncated
         fs::write(&file_dat, json).map_err(|e| format!{"{e:?}"})?;
 

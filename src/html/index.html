@@ -142,9 +142,10 @@
                     const warndiv = document.getElementById('warn-div');
                     warndiv.style.visibility = 'visible'
                     const urldiv = document.getElementById('url2');
-                    
                     urldiv.innerHTML = window.location.protocol + "//" + window.location.host + window.location.pathname +
                        '?id=' + data.substring(2) + ' <img src="copy.svg" title="Copy to the clipboard" alt="Copy to the clipboard" style="width:22px;height:22px;">'
+                    const txtdiv = document.getElementById('myInstance1');
+                    txtdiv.innerHTML = ''
                  } else if (data.startsWith('Err')) {
                      urldiv.innerHTML = 'Error:' + data.substring(3) 
                  }
