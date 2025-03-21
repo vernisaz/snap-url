@@ -44,30 +44,28 @@ impl simweb::WebPage for SnapPage {
                             Ok(n) => {
                                 match file.read_exact(&mut time_buf) { // read date of creation
                                     Ok(_) => {
-                                        
                                         match gen::ascii_bytes_to_number(&time_buf) {
                                            Ok(time) => {
                                                // can be skeeped if time passed
                                                match file.read_exact(&mut key_buf) {
                                                     Ok(_) => {
                                                         if key == key_buf { // the match
-                                                            if now.as_millis()- (time as u128) < 1000_u128*60*60*24*7  { // 7 days
+                                                            if (now.as_millis() as i64)- time < 1000_i64*60*60*24*7  { // 7 days
                                                                     entry_num = Some(n)
                                                             }
                                                             break
                                                         }
                                                     }
-                                                    _ => ()
+                                                    _ => break
                                                }
-                                               
                                            }
-                                           _ => ()
+                                           _ => break
                                         }
                                     }
-                                    _ => ()
+                                    _ => break
                                 }
                             }
-                            _ => ()
+                            _ => break
                         }
                     }
                     _ => break

@@ -14,11 +14,11 @@ You need to provide e-mail address to get a notification to, or the system can p
 a limited lifetime to read your message status. 
 The access URL to the information is displayed after.
 The URL can be distributed in any way you desire. The system doesn't distribute the URL
-and doesn't provide a security for a distribution.
+and doesn't provide a security for distribution.
 
 ## Paid features
 1. define the link valid time interval and start time (free service - the link is valid immediately for a week)
-2. get a notification that URL was opened and which IP from
+2. get a notification that URL was opened, when, and which IP from
 3. revoke the URL
 
 ## Payment protection
@@ -33,7 +33,7 @@ there is no other indication of an unsuccessful payment. You will get a snap URL
 No e-mail receipt means that something  wrong was with your payment.
 
 ## Privacy
-Snap URL doesn't collect information about users of the system besides of required to provide a paid service.
+Snap URL doesn't collect information about users of the system besides of required to provide the paid service.
 Snap URL isn't responsible for what information is shared and doesn't store the information besides of required for the service.
 
 
