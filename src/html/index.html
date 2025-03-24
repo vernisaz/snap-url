@@ -108,21 +108,7 @@
            if (mess.trim() == '') return;
            const startDate = document.querySelector('#start');
            ajax.post({url:"/rustcgi/snapurl", query: "message="+encodeURIComponent(mess) + '&time=' + startDate.valueAsNumber
-           , success: function (data) { 
-               // TODO refactor and make it a single function for a free and a paid service
-                 if (data.startsWith('Ok')) {
-                    //alert('this URL:'+data.substring(2))
-                    const warndiv = document.getElementById('warn-div');
-                    warndiv.style.visibility = 'visible'
-                    const urldiv = document.getElementById('url2');
-                    
-                    urldiv.innerHTML = window.location.protocol + "//" + window.location.host + window.location.pathname +
-                       '?id=' + data.substring(2) + ' <img src="copy.svg" title="Copy to the clipboard" alt="Copy to the clipboard" style="width:22px;height:22px;">'
-                 
-                    const txtdiv = document.getElementById('myInstance1');
-                    txtdiv.innerHTML = ''
-                 } 
-             }, respType:"html"})
+           , success: showURL, respType:"html"})
        }
        
        function genURLWithConst() {
@@ -140,20 +126,22 @@
            const notEmail = document.querySelector('#email');
            ajax.post({url:"/rustcgi/snapurl", query: "message="+encodeURIComponent(mess) + '&start=' + startDate.valueAsNumber +
            '&end=' + endDate.valueAsNumber + '&time=' + startTime.valueAsNumber + "email="+encodeURIComponent(notEmail.value) + urlEncodedData
-           , success: function (data) { 
-                 if (data.startsWith('Ok')) {
-                    //alert('this URL:'+data.substring(2))
-                    const warndiv = document.getElementById('warn-div');
-                    warndiv.style.visibility = 'visible'
-                    const urldiv = document.getElementById('url2');
-                    urldiv.innerHTML = window.location.protocol + "//" + window.location.host + window.location.pathname +
-                       '?id=' + data.substring(2) + ' <img src="copy.svg" title="Copy to the clipboard" alt="Copy to the clipboard" style="width:22px;height:22px;">'
-                    const txtdiv = document.getElementById('myInstance1');
-                    txtdiv.innerHTML = ''
-                 } else if (data.startsWith('Err')) {
-                     urldiv.innerHTML = 'Error:' + data.substring(3) 
-                 }
-             }, respType:"html"})
+           , success: showURL, respType:"html"})
+       }
+       
+       function showURL(data) {
+           if (data.startsWith('Ok')) {
+                //alert('this URL:'+data.substring(2))
+                const warndiv = document.getElementById('warn-div');
+                warndiv.style.visibility = 'visible'
+                const urldiv = document.getElementById('url2');
+                urldiv.innerHTML = window.location.protocol + "//" + window.location.host + window.location.pathname +
+                   '?id=' + data.substring(2) + ' <img src="copy.svg" title="Copy to the clipboard" alt="Copy to the clipboard" style="width:22px;height:22px;">'
+                const txtdiv = document.getElementById('myInstance1');
+                txtdiv.innerHTML = ''
+            } else if (data.startsWith('Err')) {
+                 urldiv.innerHTML = 'Error:' + data.substring(3) 
+            }
        }
        
        function validatePayment() {
