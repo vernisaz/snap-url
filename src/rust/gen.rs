@@ -94,7 +94,7 @@ impl simweb::WebPage for GenPage {
             }
         }
         if broken_dir {
-            return Err(format!{"Broken the  clash directory file {file_dat:?}"})
+            return Err(format!{"Broken the clash resolve directory file {file_dat:?}"})
         }
         max_cla += 1;
         // search for first avail slot 
