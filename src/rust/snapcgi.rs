@@ -1,6 +1,6 @@
 extern crate simweb;
+extern crate simjson;
 mod rand;
-mod json;
 mod data;
 mod gen;
 mod snap;

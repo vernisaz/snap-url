@@ -7,7 +7,6 @@ use std::path::PathBuf;
 use std::fs::OpenOptions;
 use std::io::{Read,SeekFrom,Seek,Write};
 use data;
-use json;
 use std::fs;
 use KEY_LEN;
 use DATA_DIR;
@@ -32,7 +31,7 @@ impl simweb::WebPage for GenPage {
             // TODO add a payment processing, sending a receipt and texting a security token
             _ => ()
         }
-        let load = json::esc_quotes(req. param("message").ok_or("no parameter message")?);
+        let load = simjson::esc_quotes(req. param("message").ok_or("no parameter message")?);
         //let load = esc_quote(load);
         let random_sequence = data::generate_random_sequence(KEY_LEN); // get len as a global constant
         let xx = random_sequence.as_bytes();

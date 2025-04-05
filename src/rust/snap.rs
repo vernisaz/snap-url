@@ -1,4 +1,5 @@
 extern crate simweb;
+extern crate simjson;
 // this script shows a message or a random content
 use std::fs;
 use std::convert::TryInto;
@@ -7,9 +8,8 @@ use std::time::{SystemTime,UNIX_EPOCH};
 use std::fs::OpenOptions;
 use std::io::Read;
 use data;
-use json;
 use gen;
-use json::JsonData::{Data,Text,Num};
+use simjson::JsonData::{Data,Text,Num};
 use KEY_LEN;
 use {DATA_DIR, FAKE_DIR};
 use rand::PCG32;
@@ -80,7 +80,7 @@ impl simweb::WebPage for SnapPage {
         }
         snap_file.set_extension("dat");
         if Path::new(&snap_file).is_file() {
-            let json = json::parse(&fs::read_to_string(&snap_file).map_err(|e| format!{"{e:?}"})?);
+            let json = simjson::parse(&fs::read_to_string(&snap_file).map_err(|e| format!{"{e:?}"})?);
             match json {
                 Data(ht) => {
                     if let Some(time) = ht.get("time") {
