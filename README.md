@@ -51,5 +51,7 @@ in a text form. UTF-8 is used and an information is HTML formatted. There is als
 execution in an information and direct or indirect accessing other URLs from it without a user consent.
 
 ## Dependencies
-The Rust code has one dependency [simweb](https://github.com/vernisaz/simweb). It was tested only with TJWS CGI extension, however there
+The Rust code has two dependencies [simweb](https://github.com/vernisaz/simweb) and [simjson](https://github.com/vernisaz/simjson).
+It was tested only with [TJWS](https://tjws.sf.net/) CGI extension and
+[SimHTTP](https://github.com/vernisaz/simhttp), however there
 is a big chance it will work with any CGI capable Web Server.
