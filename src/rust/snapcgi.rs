@@ -15,7 +15,7 @@ const FAKE_DIR: &str = ".fak";
 
 fn main() {
     let web_path = std::env::var(String::from("PATH_INFO"));
-    eprintln!{"pi {web_path:?}"}
+    //eprintln!{"pi {web_path:?}"}
     match web_path {
         Err(_) => gen::GenPage{}.show(),
         Ok(ref key) if key.len() == (KEY_LEN+1) as usize => snap::SnapPage{key:key.to_string()}.show(),
@@ -26,7 +26,7 @@ fn main() {
 struct Error404;
 
 impl simweb::WebPage for Error404 {
-    fn main_load(&self) -> Result<String, String> {
+    fn main_load(&self) -> Result<String, Box<dyn std::error::Error + 'static>> {
         Ok(r#"<!doctype html>
 <html><body>Page not found</body></html>"#.to_string ())
     }

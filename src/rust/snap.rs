@@ -19,7 +19,7 @@ pub struct SnapPage {
 }
 
 impl simweb::WebPage for SnapPage {
-    fn main_load(&self) -> Result<String, String> {
+    fn main_load(&self) -> Result<String, Box<dyn std::error::Error + 'static>> {
         //let req = WebData::new();
         
         let key = self.key.as_bytes()[1..=KEY_LEN].try_into().unwrap();
@@ -33,7 +33,7 @@ impl simweb::WebPage for SnapPage {
         snap_file.set_extension("dic");
         // read the hash clash directory first
         if Path::new(&snap_file).is_file() {
-            let mut file = OpenOptions::new().read(true).open(&snap_file).map_err(|e| format!{"{e:?}"})?;
+            let mut file = OpenOptions::new().read(true).open(&snap_file)?;
             let mut num_buf = [0; 5]; // Buffer to hold 5 bytes
             let mut time_buf = [0; 14];
             let mut key_buf = [0; KEY_LEN];
@@ -80,7 +80,7 @@ impl simweb::WebPage for SnapPage {
         }
         snap_file.set_extension("dat");
         if Path::new(&snap_file).is_file() {
-            let json = simjson::parse(&fs::read_to_string(&snap_file).map_err(|e| format!{"{e:?}"})?);
+            let json = simjson::parse(&fs::read_to_string(&snap_file)?);
             match json {
                 Data(ht) => {
                     if let Some(time) = ht.get("time") {
@@ -90,12 +90,12 @@ impl simweb::WebPage for SnapPage {
                                 if let Some(text) = ht.get("mes") { 
                                     if let Text(text) = text {
                                         // delete the file
-                                        fs::remove_file(&snap_file).map_err(|e| format!{"{e:?}"})?; // maybe rewrite with status - active:false
+                                        fs::remove_file(&snap_file)?; // maybe rewrite with status - active:false
                                         return Ok(text.to_owned())
                                     }
                                 }
                             } else {
-                                fs::remove_file(&snap_file).map_err(|e| format!{"{e:?}"})?;
+                                fs::remove_file(&snap_file)?;
                             }
                         } else {eprintln!{"no time"}}
                     }
@@ -114,14 +114,14 @@ impl simweb::WebPage for SnapPage {
         snap_file.push(format!{"{slot}"});
         snap_file.set_extension("scr");
         if Path::new(&snap_file).is_file() {
-            Ok(fs::read_to_string(&snap_file).map_err(|e| format!{"{e:?}"})?)
+            Ok(fs::read_to_string(&snap_file)?)
         } else { // just read some random file from there
             let path = Path::new(FAKE_DIR);
             let mut count = 0;
         
             if path.is_dir() {
-                for entry in fs::read_dir(path).map_err(|e| format!{"{e:?}"})? {
-                    let entry = entry.map_err(|e| format!{"{e:?}"})?;
+                for entry in fs::read_dir(path)? {
+                    let entry = entry?;
                     if entry.path().is_file() {
                         count += 1;
                     }
@@ -129,12 +129,12 @@ impl simweb::WebPage for SnapPage {
                 let ran_val = ran.gen_range(1.0, count as f64) as u32;
                 eprintln!{"found {count} entries in {path:?} and ran {ran_val}"}
                 count = 0;
-                for entry in fs::read_dir(path).map_err(|e| format!{"{e:?}"})? {
-                    let entry = entry.map_err(|e| format!{"{e:?}"})?;
+                for entry in fs::read_dir(path)? {
+                    let entry = entry?;
                     if entry.path().is_file() {
                         count += 1;
                         if count == ran_val {
-                            return  Ok(fs::read_to_string(entry.path()).map_err(|e| format!{"{e:?}"})?)
+                            return  Ok(fs::read_to_string(entry.path())?)
                         }
                     }
                 }

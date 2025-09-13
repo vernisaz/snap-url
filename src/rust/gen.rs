@@ -2,7 +2,7 @@
 
 use std::convert::TryInto;
 use std::time::{SystemTime,UNIX_EPOCH};
-use simweb::WebData;
+use simweb::{WebData,WebError};
 use std::path::PathBuf;
 use std::fs::OpenOptions;
 use std::io::{Read,SeekFrom,Seek,Write};
@@ -22,7 +22,7 @@ struct DirEntry {
 }
 
 impl simweb::WebPage for GenPage {
-    fn main_load(&self) -> Result<String, String> {
+    fn main_load(&self) -> Result<String, Box<dyn std::error::Error + 'static>> {
         let req = WebData::new();
         let _email = req. param("email");
         let ccn = req. param("card-number");
@@ -46,7 +46,7 @@ impl simweb::WebPage for GenPage {
         // its name usually hash-offs.dat where offs is a number not taken yet
         file_dat.push(format!{"{hash}"});
         file_dat.set_extension("dic");
-        let mut file = OpenOptions::new().write(true).create(true).read(true).open(&file_dat).map_err(|e| format!{"{e:?}"})?;
+        let mut file = OpenOptions::new().write(true).create(true).read(true).open(&file_dat)?;
         // try to read the current dir first
         let mut buffer = [0; 5]; // Buffer to hold 5 bytes
         let mut buffer2 = [0; 14];
@@ -93,7 +93,7 @@ impl simweb::WebPage for GenPage {
             }
         }
         if broken_dir {
-            return Err(format!{"Broken the clash resolve directory file {file_dat:?}"})
+            return Err(Box::new(WebError{reason:format!{"Broken the clash resolve directory file {file_dat:?}"}, cause:None}))
         }
         max_cla += 1;
         // search for first avail slot 
@@ -120,8 +120,8 @@ impl simweb::WebPage for GenPage {
             let _ = file.write_all(&entry.key);
             // if errors at writing, then probably notify somehow
         }
-        let pos = file.stream_position().map_err(|e| format!{"{e:?}"})?;
-        file.set_len(pos).map_err(|e| format!{"{e:?}"})?;
+        let pos = file.stream_position()?;
+        file.set_len(pos)?;
         
         file_dat.pop();
         file_dat.push(format!{"{hash}-{num}"});
@@ -131,7 +131,7 @@ impl simweb::WebPage for GenPage {
             std::env::var(String::from("REMOTE_ADDR")).unwrap()
         };
         // assume that te file gets truncated
-        fs::write(&file_dat, json).map_err(|e| format!{"{e:?}"})?;
+        fs::write(&file_dat, json)?;
 
         Ok("Ok".to_owned() + &random_sequence)
     }
