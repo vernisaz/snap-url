@@ -23,18 +23,19 @@ and doesn't provide a security for a distribution.
 
 ## Payment protection
 It's required to provide an e-mail for a receipt.
-When you pay for extra features, the following security measurements taking a place:
+The following security measurements taking a place, when you pay for extra features:
 1. Payment receipt gets sent in the e-mail you provided, however if payment didn't get through, you receive nothing,
-there is no other indication of an unsuccessful payment. You will get a snap URL in any case, but without extra features
+there is no other indication of an unsuccessful payment. 
+You will get a snap URL in any case, but without extra features
  if the payment was unsuccessful
-2. You'll receive a text message with a security token, when a phone number is provided with a payment
+2. You'll receive a text message with a security token, when a phone number is provided with the payment
 3. Compromised e-mail addresses didn't get accepted in payments, however here is no indication the provided e-mail address is compromised
 
-No e-mail receipt means that something  wrong was with your payment.
+No e-mail receipt means that something  wrong was with your payment. (Check your bank account if you have any doubts.)
 
 ## Privacy
 Snap URL doesn't collect information about users of the system besides of required to provide the paid service.
-Snap URL isn't responsible for what information is shared and doesn't store the information besides of required for the service.
+Snap URL isn't responsible for what information is shared and it doesn't store the information besides of required for the service.
 
 ## A protection from hacking or using this service for a SPAM, or other illegal activities
 Snap URL uses the following technique. Any access URL has a response. However, the response reflects the real data only
