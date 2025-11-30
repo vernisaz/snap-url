@@ -7,12 +7,12 @@ use std::path::{Path,PathBuf};
 use std::time::{SystemTime,UNIX_EPOCH};
 use std::fs::OpenOptions;
 use std::io::Read;
-use data;
-use gen;
+use crate::data;
+use crate::r#gen;
 use simjson::JsonData::{Data,Text,Num};
-use KEY_LEN;
-use {DATA_DIR, FAKE_DIR};
-use rand::PCG32;
+use crate::KEY_LEN;
+use crate::{DATA_DIR, FAKE_DIR};
+use crate::rand::PCG32;
 
 pub struct SnapPage {
     pub key: String
@@ -37,32 +37,27 @@ impl simweb::WebPage for SnapPage {
             let mut num_buf = [0; 5]; // Buffer to hold 5 bytes
             let mut time_buf = [0; 14];
             let mut key_buf = [0; KEY_LEN];
-            loop {
-                match file.read_exact(&mut num_buf) { // read num
-                    Ok(_) => {
-                        match gen::ascii_bytes_to_number(&num_buf) {
-                            Ok(n) => {
-                                match file.read_exact(&mut time_buf) { // read date of creation
-                                    Ok(_) => {
-                                        match gen::ascii_bytes_to_number(&time_buf) {
-                                           Ok(time) => {
-                                               // can be skeeped if time passed
-                                               match file.read_exact(&mut key_buf) {
-                                                    Ok(_) => {
-                                                        if key == key_buf { // the match
-                                                            if (now.as_millis() as i64)- time < 1000_i64*60*60*24*7  { // 7 days
-                                                                    entry_num = Some(n)
-                                                            }
-                                                            break
-                                                        }
+            while file.read_exact(&mut num_buf).is_ok() {
+                match r#gen::ascii_bytes_to_number(&num_buf) {
+                    Ok(n) => {
+                        match file.read_exact(&mut time_buf) { // read date of creation
+                            Ok(_) => {
+                                match r#gen::ascii_bytes_to_number(&time_buf) {
+                                   Ok(time) => {
+                                       // can be skeeped if time passed
+                                       match file.read_exact(&mut key_buf) {
+                                            Ok(_) => {
+                                                if key == key_buf { // the match
+                                                    if (now.as_millis() as i64)- time < 1000_i64*60*60*24*7  { // 7 days
+                                                            entry_num = Some(n)
                                                     }
-                                                    _ => break
-                                               }
-                                           }
-                                           _ => break
-                                        }
-                                    }
-                                    _ => break
+                                                    break
+                                                }
+                                            }
+                                            _ => break
+                                       }
+                                   }
+                                   _ => break
                                 }
                             }
                             _ => break
@@ -87,12 +82,10 @@ impl simweb::WebPage for SnapPage {
                         if let Num(time) = time {
                             let time = *time as u128;
                             if now.as_millis()- time < 1000_u128*60*60*24*7  {
-                                if let Some(text) = ht.get("mes") { 
-                                    if let Text(text) = text {
-                                        // delete the file
-                                        fs::remove_file(&snap_file)?; // maybe rewrite with status - active:false
-                                        return Ok(text.to_owned())
-                                    }
+                                if let Some(Text(text)) = ht.get("mes") {
+                                    // delete the file
+                                    fs::remove_file(&snap_file)?; // maybe rewrite with status - active:false
+                                    return Ok(text.to_owned())
                                 }
                             } else {
                                 fs::remove_file(&snap_file)?;

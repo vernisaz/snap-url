@@ -6,10 +6,10 @@ use simweb::{WebData,WebError};
 use std::path::PathBuf;
 use std::fs::OpenOptions;
 use std::io::{Read,SeekFrom,Seek,Write};
-use data;
+use crate::data;
 use std::fs;
-use KEY_LEN;
-use DATA_DIR;
+use crate::KEY_LEN;
+use crate::DATA_DIR;
 
 pub struct GenPage {
     
@@ -46,7 +46,7 @@ impl simweb::WebPage for GenPage {
         // its name usually hash-offs.dat where offs is a number not taken yet
         file_dat.push(format!{"{hash}"});
         file_dat.set_extension("dic");
-        let mut file = OpenOptions::new().write(true).create(true).read(true).open(&file_dat)?;
+        let mut file = OpenOptions::new().write(true).create(true).truncate(true).read(true).open(&file_dat)?;
         // try to read the current dir first
         let mut buffer = [0; 5]; // Buffer to hold 5 bytes
         let mut buffer2 = [0; 14];
@@ -54,42 +54,36 @@ impl simweb::WebPage for GenPage {
         let mut clashes = Vec::new();
         let mut max_cla = 0_u32;
         let mut broken_dir = false;
-        loop {
-            match file.read_exact(&mut buffer) { // read num
-                Ok(_) => {
-                    match ascii_bytes_to_number(&buffer) {
-                        Ok(n) => {
-                            match file.read_exact(&mut buffer2) { // read date of creation
-                                Ok(_) => {
-                                    match ascii_bytes_to_number(&buffer2) {
-                                       Ok(time) => {
-                                           // can be skeeped if time passed
-                                           match file.read_exact(&mut buffer3) {
-                                              Ok(_) => {
-                                                  if (now.as_millis() as i64) - time < 1000_i64*60*60*24*7  { // 7 days
-                                                        // TODO check if key == buffer3 (sanity check)
-                                                        let entry = DirEntry{num:n as u32, time: time as u64, key: buffer3.clone()};
-                                                        clashes.push(entry)
-                                                  }
-                                              }
-                                              _ => broken_dir = true
-                                           }
-                                           
-                                       }
-                                       _ => broken_dir = true
-                                    }
-                                }
-                                _ => broken_dir = true
-                            }
-                            if n as u32 > max_cla {
-                                max_cla = n as u32
+        while file.read_exact(&mut buffer).is_ok() {
+            match ascii_bytes_to_number(&buffer) {
+                Ok(n) => {
+                    match file.read_exact(&mut buffer2) { // read date of creation
+                        Ok(_) => {
+                            match ascii_bytes_to_number(&buffer2) {
+                               Ok(time) => {
+                                   // can be skeeped if time passed
+                                   match file.read_exact(&mut buffer3) {
+                                      Ok(_) => {
+                                          if (now.as_millis() as i64) - time < 1000_i64*60*60*24*7  { // 7 days
+                                                // TODO check if key == buffer3 (sanity check)
+                                                let entry = DirEntry{num:n as u32, time: time as u64, key: buffer3};
+                                                clashes.push(entry)
+                                          }
+                                      }
+                                      _ => broken_dir = true
+                                   }
+                                   
+                               }
+                               _ => broken_dir = true
                             }
                         }
                         _ => broken_dir = true
                     }
-                    
+                    if n as u32 > max_cla {
+                        max_cla = n as u32
+                    }
                 }
-                _ => break
+                _ => broken_dir = true
             }
         }
         if broken_dir {
@@ -110,7 +104,7 @@ impl simweb::WebPage for GenPage {
                 break
             }
         }
-        let entry = DirEntry{num:max_cla, time: now.as_millis() as u64, key: key};
+        let entry = DirEntry{num:max_cla, time: now.as_millis() as u64, key};
         let num  = entry.num;
         clashes.push(entry);
         let _ = file.seek(SeekFrom::Start(0));

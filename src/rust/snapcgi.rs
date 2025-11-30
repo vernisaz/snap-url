@@ -2,7 +2,7 @@ extern crate simweb;
 extern crate simjson;
 mod rand;
 mod data;
-mod gen;
+mod r#gen;
 mod snap;
 
 use simweb::WebPage;
@@ -17,8 +17,8 @@ fn main() {
     let web_path = std::env::var(String::from("PATH_INFO"));
     //eprintln!{"pi {web_path:?}"}
     match web_path {
-        Err(_) => gen::GenPage{}.show(),
-        Ok(ref key) if key.len() == (KEY_LEN+1) as usize => snap::SnapPage{key:key.to_string()}.show(),
+        Err(_) => r#gen::GenPage{}.show(),
+        Ok(ref key) if key.len() == (KEY_LEN+1) => snap::SnapPage{key:key.to_string()}.show(),
         _ => Error404{}.show()
     }
 }
